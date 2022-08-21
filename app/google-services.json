@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "977173130767",
+    "project_id": "sticknote-e5a67",
+    "storage_bucket": "sticknote-e5a67.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:977173130767:android:cef6a7027763665e1f7d7a",
+        "android_client_info": {
+          "package_name": "com.yuyue.compose"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "977173130767-nkj34orq8h8auae1i6a0c10dqv7c7s90.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAeZ-7ucX15GBiXA6afg2ueSQKctzhxZt8"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "977173130767-nkj34orq8h8auae1i6a0c10dqv7c7s90.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
