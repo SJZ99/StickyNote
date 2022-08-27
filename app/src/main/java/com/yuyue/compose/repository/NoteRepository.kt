@@ -1,6 +1,6 @@
 package com.yuyue.compose.repository
 
-import com.yuyue.compose.view.Note
+import com.yuyue.compose.objectModel.Note
 import io.reactivex.rxjava3.core.Observable
 
 interface NoteRepository {

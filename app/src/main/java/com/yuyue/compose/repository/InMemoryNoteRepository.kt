@@ -1,7 +1,7 @@
 package com.yuyue.compose.repository
 
 import android.util.Log
-import com.yuyue.compose.view.Note
+import com.yuyue.compose.objectModel.Note
 import io.reactivex.rxjava3.core.Observable
 import io.reactivex.rxjava3.subjects.BehaviorSubject
 

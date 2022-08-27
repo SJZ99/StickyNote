@@ -1,12 +1,14 @@
 package com.yuyue.compose.viewModel
 
 import android.util.Log
+import com.yuyue.compose.objectModel.Note
+import com.yuyue.compose.objectModel.Point
 import com.yuyue.compose.repository.InMemoryNoteRepository
 import com.yuyue.compose.repository.NoteRepository
-import com.yuyue.compose.view.Note
-import com.yuyue.compose.view.Point
+
 import io.reactivex.rxjava3.core.Observable
 import io.reactivex.rxjava3.disposables.CompositeDisposable
+import io.reactivex.rxjava3.subjects.BehaviorSubject
 import java.util.*
 
 class EditorViewModel(
@@ -15,6 +17,17 @@ class EditorViewModel(
 
     private val disposableBag = CompositeDisposable()
     val allNotes = noteRepository.getAll()
+
+    private val selectingNoteSubject = BehaviorSubject.create<Optional<Note>>()
+    val selectingNote = selectingNoteSubject.hide()
+
+    fun tapCanvas() {
+        selectingNoteSubject.onNext(Optional.empty())
+    }
+
+    fun tapNote(note: Note) {
+        selectingNoteSubject.onNext(Optional.of(note))
+    }
 
     fun moveNote(noteId: String, move: Point) {
         val disposable =

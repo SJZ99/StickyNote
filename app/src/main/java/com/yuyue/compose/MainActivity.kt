@@ -17,7 +17,7 @@ class MainActivity : ComponentActivity() {
         val editorViewModel = EditorViewModel(repository)
 
         setContent {
-            ComposeTheme {
+            ComposeTheme(false) {
                 EditorView(model = editorViewModel)
             }
         }

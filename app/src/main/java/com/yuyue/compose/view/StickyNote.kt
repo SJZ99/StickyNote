@@ -1,14 +1,20 @@
 package com.yuyue.compose.view
 
+import android.util.Log
+import androidx.compose.foundation.border
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.gestures.detectDragGestures
+import androidx.compose.foundation.gestures.detectTapGestures
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.CutCornerShape
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Surface
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -17,8 +23,22 @@ import com.yuyue.compose.objectModel.Note
 import com.yuyue.compose.objectModel.Point
 import java.util.*
 
+private val highlightBorder: @Composable Modifier.(Boolean) -> Modifier = {
+    isHighlight ->
+    if (isHighlight) {
+        this.border(2.dp, Color.Black, MaterialTheme.shapes.medium)
+    } else {
+        this
+    }
+}
+
 @Composable
-fun StickyNote(note: Note, onDrag: (Point) -> Unit) {
+fun StickyNote(
+    note: Note,
+    onDrag: (Point) -> Unit,
+    onTap: (Note) -> Unit,
+    isSelected: Boolean = false
+) {
 
     Surface(
         elevation = 4.dp,
@@ -26,6 +46,8 @@ fun StickyNote(note: Note, onDrag: (Point) -> Unit) {
             .offset(note.position.x.dp, note.position.y.dp)
             .size(Note.SIDE_LENGTH.dp)
             .zIndex(30f)
+            .highlightBorder(isSelected)
+            .clickable { onTap(note) }
             .pointerInput(note.id) {
                 detectDragGestures { change, dragAmount ->
                     change.consume()
