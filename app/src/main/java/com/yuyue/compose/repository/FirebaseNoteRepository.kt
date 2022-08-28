@@ -62,7 +62,7 @@ class FirebaseNoteRepository : NoteRepository {
 
         // push new note to firebase
         localNoteSubject
-            .throttleWithTimeout(1000, TimeUnit.MILLISECONDS)
+            .throttleWithTimeout(200, TimeUnit.MILLISECONDS)
             .observeOn(Schedulers.io())
             .subscribe { optional ->
                 optional.ifPresent {
@@ -73,7 +73,7 @@ class FirebaseNoteRepository : NoteRepository {
         // clean too old note in local history
         localNoteSubject
             .filter { it.isPresent }
-            .debounce(1200, TimeUnit.MILLISECONDS)
+            .debounce(600, TimeUnit.MILLISECONDS)
             .subscribe {
                 localNoteSubject.onNext(Optional.empty())
             }

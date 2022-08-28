@@ -31,7 +31,7 @@ fun EditorView(
     val onTap = { note: Note ->
         model.tapNote(note)
     }
-    val selectedNote = model.selectingNote.subscribeAsState(initial = Optional.empty())
+    val selectedNoteId = model.selectedNoteId.subscribeAsState(initial = Optional.empty())
 
     Surface(
         modifier = Modifier
@@ -45,17 +45,17 @@ fun EditorView(
                 notes = notes,
                 updateNotePosition = model::moveNote,
                 onTap = onTap,
-                selectedNote
+                selectedNoteId
             )
 
             AnimatedVisibility(
-                visible = !selectedNote.value.isPresent,
+                visible = !selectedNoteId.value.isPresent,
                 modifier = Modifier.align(Alignment.BottomEnd)
                                     .padding(30.dp)
                                     .size((ICON_SIZE * 1.8).dp)
             ) {
                 FloatingActionButton(
-                    onClick = {},
+                    onClick = { model.createNewNote() },
                 ) {
                     val painter = painterResource(id = R.drawable.plus)
                     Icon(
@@ -68,10 +68,21 @@ fun EditorView(
             }
 
             AnimatedVisibility(
-                visible = selectedNote.value.isPresent,
+                visible = selectedNoteId.value.isPresent,
                 modifier = Modifier.align(Alignment.BottomCenter)
             ) {
-                OperationMenuView()
+                OperationMenuView(
+                    delete = {
+                        selectedNoteId.value.ifPresent {
+                            model.deleteNoteById(it)
+                        }
+                    },
+                    changeColor = { color ->
+                        selectedNoteId.value.ifPresent {
+                            model.changeColorById(it, color)
+                        }
+                    }
+                )
             }
         }
     }

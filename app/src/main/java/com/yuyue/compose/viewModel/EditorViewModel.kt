@@ -1,6 +1,7 @@
 package com.yuyue.compose.viewModel
 
 import android.util.Log
+import com.yuyue.compose.objectModel.Color
 import com.yuyue.compose.objectModel.Note
 import com.yuyue.compose.objectModel.Point
 import com.yuyue.compose.repository.InMemoryNoteRepository
@@ -18,15 +19,35 @@ class EditorViewModel(
     private val disposableBag = CompositeDisposable()
     val allNotes = noteRepository.getAll()
 
-    private val selectingNoteSubject = BehaviorSubject.create<Optional<Note>>()
-    val selectingNote = selectingNoteSubject.hide()
+    private val selectedNoteIdSubject = BehaviorSubject.create<Optional<String>>()
+    val selectedNoteId: Observable<Optional<String>> = selectedNoteIdSubject.hide()
+
+    private val selectedNoteSubject = BehaviorSubject.create<Optional<Note>>()
+
+        init {
+            val disposable = BehaviorSubject.combineLatest(allNotes, selectedNoteIdSubject) {
+                notes: List<Note>, optionalId: Optional<String> ->
+
+                    if (optionalId.isPresent) {
+                        Optional.ofNullable(
+                            notes.find { optionalId.get() == it.id }
+                        )
+                    } else Optional.empty()
+
+            }.subscribe { optionalNote ->
+                selectedNoteSubject.onNext(optionalNote)
+            }
+
+            disposableBag.add(disposable)
+        }
+
 
     fun tapCanvas() {
-        selectingNoteSubject.onNext(Optional.empty())
+        selectedNoteIdSubject.onNext(Optional.empty())
     }
 
     fun tapNote(note: Note) {
-        selectingNoteSubject.onNext(Optional.of(note))
+        selectedNoteIdSubject.onNext(Optional.of(note.id))
     }
 
     fun moveNote(noteId: String, move: Point) {
@@ -46,5 +67,29 @@ class EditorViewModel(
                     }
             }
         disposableBag.add(disposable)
+    }
+
+    fun createNewNote() {
+        val id = UUID.randomUUID().toString()
+        val text = "new note"
+        noteRepository.create(
+            Note(
+                id,
+                text,
+                Point(0f, 0f),
+                Color.Gorse
+            )
+        )
+    }
+
+    fun deleteNoteById(id: String) {
+        noteRepository.delete(id)
+    }
+
+    fun changeColorById(id: String, color: Color) {
+        val note = selectedNoteSubject.value
+        if (note != null && note.isPresent) {
+            noteRepository.putNote(note.map { it.copy(color = color) }.get())
+        }
     }
 }

@@ -14,14 +14,14 @@ fun BoardView(
     notes: State<List<Note>>,
     updateNotePosition: (String, Point) -> Unit,
     onTap: (Note) -> Unit,
-    selectedNote: State<Optional<Note>>
+    selectedNote: State<Optional<String>>
 ) {
 
     Box(modifier = Modifier.fillMaxSize()) {
 
         notes.value.forEach { note ->
             val isSelected = selectedNote.value.isPresent
-                    && selectedNote.value.get().id == note.id
+                    && selectedNote.value.get() == note.id
 
             val onDrag = {
                 p: Point -> updateNotePosition(note.id, p)
